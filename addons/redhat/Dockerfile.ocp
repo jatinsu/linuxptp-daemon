@@ -8,7 +8,7 @@ FROM registry.ci.openshift.org/ocp/4.22:base-rhel9
 
 # gpsd-minimal and gpsd-minimal-clients are no longer in RHEL 10
 # remove when base image is upgraded to RHEL 10
-RUN if yum list gpsd-minimal >/dev/null 2>&1; then GPSD_PKGS="gpsd-minimal gpsd-minimal-clients"; else GPSD_PKGS="gpsd gpsd-clients"; fi && \
+RUN if yum repoquery gpsd-minimal 2>/dev/null | grep -q gpsd-minimal; then GPSD_PKGS="gpsd-minimal gpsd-minimal-clients"; else GPSD_PKGS="gpsd gpsd-clients"; fi && \
   yum -y update && yum -y update glibc && yum --setopt=skip_missing_names_on_install=False -y \
   install \
   pciutils \
